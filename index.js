@@ -151,7 +151,6 @@ module.exports = function autoRecord() {
 
       const createStubbedRoute = (method, url) => {
         let index = 0;
-        const response = sortedRoutes[method][url][index];
 
         cy.intercept(
           {
@@ -159,9 +158,8 @@ module.exports = function autoRecord() {
             method,
           },
           (req) => {
-            req.reply((res) => {
               const newResponse = sortedRoutes[method][url][index];
-              res.send(
+              req.reply(
                 newResponse.status,
                 newResponse.fixtureId
                   ? {
@@ -174,10 +172,10 @@ module.exports = function autoRecord() {
               if (sortedRoutes[method][url].length > index + 1) {
                 index++;
               }
-            });
           },
         );
       };
+
 
       // Stub all recorded routes
       Object.keys(sortedRoutes).forEach((method) => {
